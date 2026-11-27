@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101714">
+<meta name="description" content="A personal Catholic Bible first-read tracker.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<title>Scripture — Bible Tracker</title>
+<style>
+:root{color-scheme:dark;--bg:#101714;--panel:#18221e;--panel2:#202d27;--line:#2d3b34;--text:#f1f4ef;--muted:#a3b1a8;--green:#b8d8a9;--green2:#294633;--gold:#d7bd82;--radius:20px}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% -10%,#293c30 0,transparent 42%),var(--bg);color:var(--text);font:16px/1.45 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button{font:inherit;color:inherit;cursor:pointer} .wrap{max-width:760px;margin:auto;padding:22px 16px calc(40px + env(safe-area-inset-bottom))}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:6px 2px 24px}.brand{display:flex;align-items:center;gap:11px}.mark{width:42px;height:42px;border-radius:14px;background:var(--green2);display:grid;place-items:center;color:var(--green);font-size:23px}.eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700}.brand h1{font-size:19px;margin:1px 0 0;letter-spacing:-.03em}.pill{border:1px solid var(--line);border-radius:999px;padding:7px 11px;color:var(--muted);font-size:12px}
+.hero{background:linear-gradient(145deg,#25392d,#19251f 72%);border:1px solid #354b3c;border-radius:26px;padding:23px 21px;margin-bottom:14px;position:relative;overflow:hidden}.hero:after{content:"✦";position:absolute;right:20px;top:7px;font-size:95px;color:#ffffff09}.hero .eyebrow{color:#c2d4c5}.hero h2{font-size:27px;line-height:1.12;letter-spacing:-.045em;margin:9px 0 6px;max-width:80%}.sub{color:#c1cec4;font-size:14px}.progress-track{height:9px;background:#ffffff20;border-radius:99px;overflow:hidden;margin:20px 0 9px}.progress-fill{height:100%;background:var(--green);border-radius:99px;width:0;transition:width .25s}.progress-meta{display:flex;justify-content:space-between;color:#d5e0d7;font-size:12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0 24px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:14px 13px}.stat strong{display:block;font-size:23px;letter-spacing:-.04em}.stat span{color:var(--muted);font-size:11px}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:10px;margin:25px 2px 11px}.section-head h3{margin:0;font-size:18px;letter-spacing:-.02em}.section-head small{color:var(--muted);font-size:12px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.btn{border:1px solid var(--line);background:var(--panel2);padding:9px 12px;border-radius:12px;font-size:12px}.btn.primary{background:var(--green);color:#152219;border-color:var(--green);font-weight:700}.btn:active{transform:scale(.98)}
+.search{width:100%;border:1px solid var(--line);background:var(--panel);color:var(--text);padding:13px 14px;border-radius:13px;outline:none;margin-bottom:12px;font-size:14px}.search:focus{border-color:var(--green)}
+.group{margin:14px 0}.group-title{display:flex;justify-content:space-between;align-items:center;padding:10px 3px;color:var(--muted);font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:800}.book{background:var(--panel);border:1px solid var(--line);border-radius:15px;margin:7px 0;overflow:hidden}.book-top{display:flex;align-items:center;gap:11px;padding:13px 13px;min-height:61px}.check{width:25px;height:25px;flex:0 0 25px;border-radius:8px;border:1.5px solid #617268;background:transparent;display:grid;place-items:center;color:#142219;font-weight:900;font-size:15px}.check.done{background:var(--green);border-color:var(--green)}.book-info{flex:1;min-width:0}.book-name{font-weight:650;font-size:14px}.book-meta{font-size:11px;color:var(--muted);margin-top:2px}.book-right{display:flex;align-items:center;gap:8px}.mini-track{width:45px;height:5px;background:#34433b;border-radius:99px;overflow:hidden}.mini-track i{display:block;height:100%;background:var(--green)}.chev{color:var(--muted);font-size:17px;width:22px;text-align:center}.chapters{border-top:1px solid var(--line);padding:13px;display:none}.book.open .chapters{display:block}.chapter-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:7px}.chapter{aspect-ratio:1;border:1px solid var(--line);border-radius:9px;background:#202b25;color:var(--muted);font-size:12px}.chapter.done{background:var(--green2);border-color:#52745a;color:#e1f1dc}.chapter-note{font-size:11px;color:var(--muted);margin:0 0 10px}.book.current{border-color:#8cae83;box-shadow:0 0 0 1px #8cae8330}.current-tag{font-size:9px;color:#d5e9c9;background:#314a37;padding:3px 6px;border-radius:99px;text-transform:uppercase;letter-spacing:.06em}
+footer{color:var(--muted);font-size:11px;text-align:center;margin:30px 12px 0}.toast{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:#e4f0df;color:#17231b;padding:10px 15px;border-radius:99px;font-size:12px;font-weight:700;box-shadow:0 8px 30px #0005;opacity:0;pointer-events:none;transition:opacity .2s}.toast.show{opacity:1}
+@media(min-width:600px){.wrap{padding-top:30px}.hero{padding:30px}.hero h2{font-size:34px}.chapter-grid{grid-template-columns:repeat(10,1fr)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="brand"><div class="mark">✝</div><div><div class="eyebrow">Your first read</div><h1>Scripture Tracker</h1></div></div><div class="pill">Catholic · 73 books</div></header>
+<section class="hero">
+<div class="eyebrow">The journey so far</div><h2 id="heroTitle">One book at a time.</h2><div class="sub" id="heroSub">Your whole Bible, one first read.</div>
+<div class="progress-track"><div class="progress-fill" id="mainProgress"></div></div>
+<div class="progress-meta"><span id="progressText">0 of 73 books</span><span id="progressPct">0%</span></div>
+</section>
+<div class="stats">
+<div class="stat"><strong id="booksStat">3/73</strong><span>Books completed</span></div>
+<div class="stat"><strong id="chaptersStat">55</strong><span>Chapters completed</span></div>
+<div class="stat"><strong id="remainingStat">70</strong><span>Books to go</span></div>
+</div>
+<div class="section-head"><h3>Your reading plan</h3><small id="planCount">73 books · Catholic canon</small></div>
+<div class="actions"><button class="btn primary" id="continueBtn">Continue current book →</button><button class="btn" id="resetBtn">Reset progress</button></div>
+<input class="search" id="search" type="search" placeholder="Find a book…" aria-label="Find a book">
+<div id="list"></div>
+<footer>Progress is saved on this device. Use the same browser on this phone to keep your place.<br>Chapter counts follow common Catholic Bible numbering; editions can vary slightly.</footer>
+</div>
+<div class="toast" id="toast">Progress saved</div>
+<script>
+const BOOKS = [{"name": "John", "chapters": 21, "testament": "NT"}, {"name": "Acts", "chapters": 28, "testament": "NT"}, {"name": "Galatians", "chapters": 6, "testament": "NT"}, {"name": "1 Thessalonians", "chapters": 5, "testament": "NT"}, {"name": "2 Thessalonians", "chapters": 3, "testament": "NT"}, {"name": "1 Corinthians", "chapters": 16, "testament": "NT"}, {"name": "2 Corinthians", "chapters": 13, "testament": "NT"}, {"name": "Romans", "chapters": 16, "testament": "NT"}, {"name": "Philippians", "chapters": 4, "testament": "NT"}, {"name": "Philemon", "chapters": 1, "testament": "NT"}, {"name": "Colossians", "chapters": 4, "testament": "NT"}, {"name": "Ephesians", "chapters": 6, "testament": "NT"}, {"name": "1 Timothy", "chapters": 6, "testament": "NT"}, {"name": "Titus", "chapters": 3, "testament": "NT"}, {"name": "2 Timothy", "chapters": 4, "testament": "NT"}, {"name": "Luke", "chapters": 24, "testament": "NT"}, {"name": "Genesis", "chapters": 50, "testament": "OT"}, {"name": "Exodus", "chapters": 40, "testament": "OT"}, {"name": "Mark", "chapters": 16, "testament": "NT"}, {"name": "Leviticus", "chapters": 27, "testament": "OT"}, {"name": "Numbers", "chapters": 36, "testament": "OT"}, {"name": "Deuteronomy", "chapters": 34, "testament": "OT"}, {"name": "Joshua", "chapters": 24, "testament": "OT"}, {"name": "Judges", "chapters": 21, "testament": "OT"}, {"name": "Ruth", "chapters": 4, "testament": "OT"}, {"name": "1 Samuel", "chapters": 31, "testament": "OT"}, {"name": "2 Samuel", "chapters": 24, "testament": "OT"}, {"name": "1 Kings", "chapters": 22, "testament": "OT"}, {"name": "2 Kings", "chapters": 25, "testament": "OT"}, {"name": "Matthew", "chapters": 28, "testament": "NT"}, {"name": "1 Chronicles", "chapters": 29, "testament": "OT"}, {"name": "2 Chronicles", "chapters": 36, "testament": "OT"}, {"name": "Ezra", "chapters": 10, "testament": "OT"}, {"name": "Nehemiah", "chapters": 13, "testament": "OT"}, {"name": "Esther", "chapters": 16, "testament": "OT"}, {"name": "Tobit", "chapters": 14, "testament": "OT"}, {"name": "Judith", "chapters": 16, "testament": "OT"}, {"name": "1 Maccabees", "chapters": 16, "testament": "OT"}, {"name": "2 Maccabees", "chapters": 15, "testament": "OT"}, {"name": "Job", "chapters": 42, "testament": "OT"}, {"name": "Psalms", "chapters": 150, "testament": "OT"}, {"name": "Proverbs", "chapters": 31, "testament": "OT"}, {"name": "Ecclesiastes", "chapters": 12, "testament": "OT"}, {"name": "Song of Songs", "chapters": 8, "testament": "OT"}, {"name": "Wisdom", "chapters": 19, "testament": "OT"}, {"name": "Sirach", "chapters": 51, "testament": "OT"}, {"name": "Isaiah", "chapters": 66, "testament": "OT"}, {"name": "Jeremiah", "chapters": 52, "testament": "OT"}, {"name": "Lamentations", "chapters": 5, "testament": "OT"}, {"name": "Baruch", "chapters": 6, "testament": "OT"}, {"name": "Ezekiel", "chapters": 48, "testament": "OT"}, {"name": "Daniel", "chapters": 14, "testament": "OT"}, {"name": "Hosea", "chapters": 14, "testament": "OT"}, {"name": "Joel", "chapters": 4, "testament": "OT"}, {"name": "Amos", "chapters": 9, "testament": "OT"}, {"name": "Obadiah", "chapters": 1, "testament": "OT"}, {"name": "Jonah", "chapters": 4, "testament": "OT"}, {"name": "Micah", "chapters": 7, "testament": "OT"}, {"name": "Nahum", "chapters": 3, "testament": "OT"}, {"name": "Habakkuk", "chapters": 3, "testament": "OT"}, {"name": "Zephaniah", "chapters": 3, "testament": "OT"}, {"name": "Haggai", "chapters": 2, "testament": "OT"}, {"name": "Zechariah", "chapters": 14, "testament": "OT"}, {"name": "Malachi", "chapters": 3, "testament": "OT"}, {"name": "Hebrews", "chapters": 13, "testament": "NT"}, {"name": "James", "chapters": 5, "testament": "NT"}, {"name": "1 Peter", "chapters": 5, "testament": "NT"}, {"name": "2 Peter", "chapters": 3, "testament": "NT"}, {"name": "1 John", "chapters": 5, "testament": "NT"}, {"name": "2 John", "chapters": 1, "testament": "NT"}, {"name": "3 John", "chapters": 1, "testament": "NT"}, {"name": "Jude", "chapters": 1, "testament": "NT"}, {"name": "Revelation", "chapters": 22, "testament": "NT"}];
+const STORAGE_KEY = "scripture-tracker-v1";
+const initial = {completed:{John:true,Acts:true,Galatians:true}, chapters:{}, current:"1 Thessalonians"};
+let state;
+try { state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || structuredClone(initial); } catch(e){state=structuredClone(initial)}
+if(!state.completed)state.completed={}; if(!state.chapters)state.chapters={};
+const $ = id => document.getElementById(id);
+const totalChapters = BOOKS.reduce((s,b)=>s+b.chapters,0);
+function doneCount(b){return (state.chapters[b.name]||[]).length}
+function isDone(b){return !!state.completed[b.name] || doneCount(b)>=b.chapters}
+function bookPct(b){return isDone(b)?100:Math.round(doneCount(b)/b.chapters*100)}
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));render();toast()}
+let toastTimer;
+function toast(){const t=$("toast");t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),1200)}
+function nextBook(){return BOOKS.find(b=>!isDone(b)) || null}
+function updateStats(){
+ const completed=BOOKS.filter(isDone).length;
+ const chapters=BOOKS.reduce((s,b)=>s+Math.min(b.chapters,doneCount(b)),0);
+ const pct=Math.round(completed/BOOKS.length*100);
+ $("mainProgress").style.width=pct+"%";$("progressText").textContent=`${completed} of ${BOOKS.length} books`; $("progressPct").textContent=pct+"%";
+ $("booksStat").textContent=`${completed}/${BOOKS.length}`;$("chaptersStat").textContent=chapters.toLocaleString();$("remainingStat").textContent=BOOKS.length-completed;
+ const n=nextBook();
+ $("heroTitle").textContent=n?`Currently reading ${state.current || n.name}`:"First read complete.";
+ $("heroSub").textContent=n?`${completed} books down. Keep going at your own pace.`:"All 73 books completed. What a journey.";
+ $("continueBtn").textContent=n?`Continue ${state.current || n.name} →`:"Revisit your favourites →";
+}
+function render(){
+ updateStats();
+ const q=$("search").value.trim().toLowerCase();
+ const groups=[["Already read",BOOKS.slice(0,3)],["Finish Paul’s letters",BOOKS.slice(3,15)],["Gospel",BOOKS.slice(15,16)],["Pentateuch & Gospel",BOOKS.slice(16,22)],["Israel’s history",BOOKS.slice(22,29)],["Gospel",BOOKS.slice(29,30)],["History & deuterocanonical books",BOOKS.slice(30,39)],["Wisdom & poetry",BOOKS.slice(39,46)],["Major prophets",BOOKS.slice(46,52)],["Minor prophets",BOOKS.slice(52,64)],["Remaining New Testament",BOOKS.slice(64,73)]];
+ let html="";
+ groups.forEach(([title,items])=>{
+  const filtered=items.filter(b=>b.name.toLowerCase().includes(q));
+  if(!filtered.length)return;
+  html+=`<section class="group"><div class="group-title"><span>${title}</span><span>${filtered.filter(isDone).length}/${filtered.length}</span></div>`;
+  filtered.forEach(b=>{
+   const complete=isDone(b), count=doneCount(b), current=!complete && (state.current===b.name);
+   const pct=bookPct(b), chapters=state.chapters[b.name]||[];
+   html+=`<article class="book ${current?'current':''}" data-book="${b.name}">
+    <div class="book-top">
+     <button class="check ${complete?'done':''}" data-action="complete" aria-label="${complete?'Mark incomplete':'Mark complete'} ${b.name}">${complete?'✓':''}</button>
+     <div class="book-info"><div class="book-name">${b.name} ${current?'<span class="current-tag">In progress</span>':''}</div><div class="book-meta">${b.testament==='NT'?'New Testament':'Old Testament'} · ${b.chapters} chapters · ${complete?'Completed':count?`${count} chapters listened`:'Not started'}</div></div>
+     <div class="book-right"><div class="mini-track"><i style="width:${pct}%"></i></div><span class="chev">⌄</span></div>
+    </div>
+    <div class="chapters"><p class="chapter-note">Tap each chapter as you listen. You can also mark the whole book complete using the checkbox above.</p><div class="chapter-grid">${Array.from({length:b.chapters},(_,i)=>`<button class="chapter ${chapters.includes(i+1)||complete?'done':''}" data-chapter="${i+1}" aria-label="Chapter ${i+1}">${i+1}</button>`).join("")}</div></div>
+   </article>`;
+  });
+  html+="</section>";
+ });
+ $("list").innerHTML=html||'<p class="sub">No books match that search.</p>';
+}
+$("list").addEventListener("click",e=>{
+ const article=e.target.closest(".book"); if(!article)return;
+ const name=article.dataset.book; const b=BOOKS.find(x=>x.name===name);
+ if(e.target.dataset.action==="complete"){
+  if(isDone(b)){delete state.completed[name];state.chapters[name]=[]}
+  else {state.completed[name]=true;state.chapters[name]=Array.from({length:b.chapters},(_,i)=>i+1)}
+  if(state.current===name && state.completed[name]){const next=BOOKS.find(x=>!isDone(x));state.current=next?next.name:""}
+  save();return;
+ }
+ if(e.target.dataset.chapter){
+  const n=Number(e.target.dataset.chapter);let arr=state.chapters[name]||[];
+  arr=arr.includes(n)?arr.filter(x=>x!==n):[...arr,n];state.chapters[name]=arr;
+  if(arr.length>=b.chapters){state.completed[name]=true}else{delete state.completed[name];state.current=name}
+  save();return;
+ }
+ if(e.target.closest(".book-top")){article.classList.toggle("open");}
+});
+$("search").addEventListener("input",render);
+$("continueBtn").addEventListener("click",()=>{
+ const b=BOOKS.find(x=>x.name===state.current&&!isDone(x))||nextBook();
+ if(!b){$("search").value="";render();return}
+ state.current=b.name;save();
+ const el=[...document.querySelectorAll(".book")].find(x=>x.dataset.book===b.name);
+ if(el){el.classList.add("open");el.scrollIntoView({behavior:"smooth",block:"center"})}
+});
+$("resetBtn").addEventListener("click",()=>{
+ if(confirm("Reset all your progress and return to the starting point?")){state=structuredClone(initial);save();$("search").value=""}
+});
+render();
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}))}
+</script>
+</body></html>
